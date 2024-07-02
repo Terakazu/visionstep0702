@@ -1,5 +1,4 @@
 <!-- resources/views/home.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
@@ -43,6 +42,7 @@
                 @if (!empty($visionboards) && count($visionboards) > 0)
                     <ul>
                         @foreach ($visionboards as $visionboard)
+                          @if ($visionboard->user_id == Auth::user()->id) <!-- 追加のチェック -->
                             <li class="mb-2 flex justify-between items-center">
                                 <div id="{{ $visionboard->id }}">
                                     {{ $visionboard->board_name }}
@@ -55,9 +55,6 @@
                                      <a href="{{ route('visionboards.elements.create', ['visionboard' => $visionboard->id]) }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
                                         要素を登録
                                     </a>
-                                    <a href="{{ route('visionboard_edit', ['visionboard' => $visionboard->id]) }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
-                                        更新
-                                    </a>
                                     <form action="{{ route('visionboard_destroy', ['visionboard' => $visionboard->id]) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
@@ -67,29 +64,31 @@
                                     </form>
                                 </div>
                             </li>
+                            @endif
                         @endforeach
                     </ul>
-                @else
-                    <p>No visionboards found.</p>
-                @endif
-                <!-- ページネーション -->
+                    <!-- ページネーション -->
                 <div>
                     {{ $visionboards->links() }}
                 </div>
+                @else
+                    <p>No visionboards found.</p>
+                @endif
+                
             </div>
         </div>
 
         <!-- 右エリア -->
         <div class="w-full md:w-2/3 p-2">
             <div id="right-area">
-                @if ($latestVisionboard)
+               @if ($latestVisionboard && $latestVisionboard->user_id == Auth::user()->id) <!-- 追加のチェック -->
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 bg-white border-b border-gray-500 font-bold">
                             選択中のビジョンボード: {{ $latestVisionboard->board_name }}
                         </div>
                         <div class="visionboard" style="position: relative; width: 800px; height: 600px; border: 1px solid #ccc; background-color: #f9f9f9; margin: 0 auto;">
                             @foreach ($latestVisionboard->elements as $element)
-                                <div class="element" style="position: absolute; left: {{ $element->position_x }}px; bottom: {{ $element->position_y }}px; border: 1px solid #000; padding: 10px; background-color: #fff;">
+                                <div class="element" style="position: absolute; left: {{ $element->position_x }}px; top: {{ $element->position_y }}px; padding: 10px; background-color: #fff;">
                                     <p>{{ $element->element_data }}</p>
                                     @if ($element->image)
                                         <img src="/images/{{ $element->image }}" alt="Element Image" style="max-width: 100px;">

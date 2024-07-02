@@ -33,49 +33,46 @@ class ElementController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request,Visionboard $visionboard)
-    {
-   
-        $request->validate([
-            'element_type'=>'required|min:2|max:255',
-            'element_data'=>'nullable|min:2|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'position_x'=>'required',
-            'position_y'=>'required',
-        ]);
-        
-          if ($request->hasFile('image')) {
+    public function store(Request $request, Visionboard $visionboard)
+{
+    $request->validate([
+        'element_type' => 'required|in:text,image',
+        'element_data' => 'nullable|min:2|max:255',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
+    $element = new Element();
+    $element->element_type = $request->element_type;
+    $element->element_data = $request->element_data;
+    $element->position_x = rand(0, 700); // ランダムな初期位置
+    $element->position_y = rand(0, 500); // ランダムな初期位置
+    $element->visionboard_id = $visionboard->id;
+
+    if ($request->hasFile('image')) {
         $imageName = time().'.'.$request->image->extension();
-        
-         // ディレクトリの存在を確認
+
+        // ディレクトリの存在を確認
         $imagePath = public_path('images');
         if (!file_exists($imagePath)) {
             mkdir($imagePath, 0777, true); // ディレクトリがない場合は作成
         }
-        
+
         $request->image->move($imagePath, $imageName);
+        $element->image = $imageName;
     } else {
-        $imageName = null; // 画像がアップロードされていない場合は null を設定
+        $element->image = null; // 画像がアップロードされていない場合は null を設定
     }
 
-    $element = Element::create([
-        'element_type' => $request->element_type,
-        'element_data' => $request->element_data,
-        'image' => $imageName,
-        'position_x' => $request->position_x,
-        'position_y' => $request->position_y,
-        'visionboard_id' => $visionboard->id,
-    ]);
+    $element->save();
 
     if ($element) {
         // 作成された要素の詳細ページにリダイレクト
-        return redirect()->route('visionboards.elements.index', ['visionboard' => $visionboard->id])
+        return redirect()->route('visionboards.show', ['visionboard' => $visionboard->id])
                          ->with('success', 'Element has been created successfully.');
     } else {
         return back()->with('error', 'Failed to create element.');
     }
-    }
-    
+}
 
     /**
      * Display the specified resource.
@@ -141,4 +138,18 @@ class ElementController extends Controller
      return redirect()->route('visionboards.elements.index', ['visionboard' => $visionboardId])
                          ->with('success', 'Element deleted successfully');
     }
+    
+    public function savePositions(Request $request, Visionboard $visionboard)
+{
+    foreach ($request->positions as $position) {
+        $element = Element::find($position['id']);
+        if ($element && $element->visionboard_id == $visionboard->id) {
+            $element->position_x = $position['position_x'];
+            $element->position_y = $position['position_y'];
+            $element->save();
+        }
+    }
+
+    return response()->json(['success' => true]);
+}
 }

@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.draggable {
+    position: absolute;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 200px;
+    word-wrap: break-word; /* テキストが長い場合に折り返す */
+}
+
+.visionboard {
+    border: 1px solid #ccc; /* ボードの枠を追加 */
+    background-color: #f9f9f9; /* 背景色を追加 */
+    width: 800px;
+    height: 600px;
+    position: relative;
+    margin: 0 auto;
+    overflow: hidden; /* 要素がボードの外に出ないようにする */
+}
+
+/* 画像の最大サイズを指定 */
+.draggable img {
+    max-width: 200px; /* 幅を100pxに制限 */
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+

@@ -15,15 +15,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-          // ページネーション可能なビジョンボードのリストを取得（1ページあたり10件）
-    $visionboards = Visionboard::with('elements')->paginate(10);
+           // 認証されたユーザーのビジョンボードを作成日時の降順で取得し、ページネート
+        $visionboards = Visionboard::where('user_id', Auth::user()->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+        // 最新のビジョンボードを個別に取得
+        $latestVisionboard = Visionboard::where('user_id', Auth::user()->id)
+            ->latest()
+            ->first();
 
-        // 最新のビジョンボードを取得
-        $latestVisionboard = Visionboard::with('elements')->latest()->first();
-        
-
-        // ビューにデータを渡す
-        return view('home', compact('visionboards', 'latestVisionboard'));
-    } 
-    //
+        return view('home', compact('latestVisionboard', 'visionboards'));
+    }
+    
 }

@@ -13,18 +13,32 @@
                 
                <form action="{{ route('visionboards.elements.store', ['visionboard' => $visionboard->id]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    
+                     @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    
                     <div class="flex flex-col px-2 py-2">
                         <!-- カラム１ -->
                         <div class="w-full md:w-1/1 px-3 mb-2 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                要素のタイプ
+                                要素のタイプ（テキストまたは画像）
                             </label>
-                            <input name="element_type" value="{{ old('element_type') }}" class="appearance-none block w-full text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="">
+                            <select name="element_type" class="appearance-none block w-full text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white">
+                                <option value="text" {{ old('element_type') == 'text' ? 'selected' : '' }}>テキスト</option>
+                                <option value="image" {{ old('element_type') == 'image' ? 'selected' : '' }}>画像</option>
+                            </select>
                         </div>
                         <!-- カラム２ -->
                         <div class="w-full md:w-1/1 px-3 mb-2 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                要素のデータ
+                                テキスト（画像の場合は、画像
                             </label>
                             <input name="element_data" value="{{ old('element_data') }}" class="appearance-none block w-full text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="">
                         </div>
@@ -35,20 +49,7 @@
                                 </label>
                                 <input name="image" class="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="file" placeholder="">
                             </div>
-                        <!-- カラム４ -->
-                        <div class="w-full md:w-1/1 px-3 mb-2 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                x座標
-                            </label>
-                            <input name="position_x" value="{{ old('position_x') }}" class="appearance-none block w-full text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="number" placeholder="">
-                        </div>
-                        <!-- カラム５ -->
-                        <div class="w-full md:w-1/1 px-3 mb-2 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                y座標
-                            </label>
-                            <input name="position_y" value="{{ old('position_y') }}" class="appearance-none block w-full text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="number" placeholder="">
-                        </div>
+                       
                          <input type="hidden" name="visionboard_id" value="{{ $visionboard->id }}">
                         <!-- 保存ボタン -->
                         <div class="flex flex-col">
