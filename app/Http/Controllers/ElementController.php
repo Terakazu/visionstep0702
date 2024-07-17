@@ -39,6 +39,8 @@ class ElementController extends Controller
         'element_type' => 'required|in:text,image',
         'element_data' => 'nullable|min:2|max:255',
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+         'text_style' => 'nullable|in:normal,bold',
+        'text_size' => 'nullable|in:text-base,text-4xl,text-2xl',
     ]);
 
     $element = new Element();
@@ -47,6 +49,8 @@ class ElementController extends Controller
     $element->position_x = rand(0, 700); // ランダムな初期位置
     $element->position_y = rand(0, 500); // ランダムな初期位置
     $element->visionboard_id = $visionboard->id;
+    $element->text_style = $request->text_style;
+    $element->text_size = $request->text_size;
 
     if ($request->hasFile('image')) {
         $imageName = time().'.'.$request->image->extension();
@@ -106,6 +110,8 @@ class ElementController extends Controller
         'position_x' => 'required|numeric',
         'position_y' => 'required|numeric',
         'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+         'text_style' => 'nullable|in:normal,bold',
+        'text_size' => 'nullable|in:text-base,text-4xl,text-2xl',
     ]);
 
     if ($request->hasFile('image')) {
@@ -118,6 +124,8 @@ class ElementController extends Controller
     $element->element_data = $request->element_data;
     $element->position_x = $request->position_x;
     $element->position_y = $request->position_y;
+     $element->text_style = $request->text_style;
+    $element->text_size = $request->text_size;
 
     $element->save();
 

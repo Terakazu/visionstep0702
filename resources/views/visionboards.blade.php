@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('content')
+<div class="flex h-screen">
+
+    
     <!--ヘッダー[START]-->
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -26,7 +29,7 @@
         </div>
 
     <!-- ボードの登録フォーム -->
-    <form action="{{ url('visionboards') }}" method="POST" class="w-full max-w-lg">
+    <form action="{{ route('visionboards.store') }}" method="POST" class="w-full max-w-lg">
         @csrf
         <div class="flex flex-col px-2 py-2">
             <!-- カラム１ -->
@@ -37,9 +40,9 @@
                 <input name="board_name" class="appearance-none block w-full text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="">
             </div>
 
-            <!-- 登録ボタン -->
+              <!-- 登録ボタン -->
             <div class="text-center px-4 py-2 m-2">
-                <x-button class="bg-blue-500 rounded-lg">新規登録</x-button>
+                <button type="submit" class="btn btn-register">新しいボードを作成</button>
             </div>
         </div>
     </form>
@@ -60,17 +63,17 @@
                         </div>
                         <div>
                       
-                          <a href="{{ route('visionboards.elements.index', ['visionboard' => $visionboard->id]) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                          <a href="{{ route('visionboards.elements.index', ['visionboard' => $visionboard->id]) }}" class="btn btn-custom-blue">
                                 要素を見る
                             </a>
-                            <a href="{{ route('visionboard_edit', ['visionboard' => $visionboard->id]) }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                            <a href="{{ route('visionboards.edit', ['visionboard' => $visionboard->id]) }}" class="btn btn-custom-blue">
                                   更新
                             </a>
 
-                            <form action="{{ route('visionboard_destroy', ['visionboard' => $visionboard->id]) }}" method="POST" class="inline">
+                            <form action="{{ route('visionboards.destroy', ['visionboard' => $visionboard->id]) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                                <button type="submit" class="btn btn-custom-blue">
                                     削除
                                 </button>
                             </form>
@@ -79,7 +82,7 @@
                 @endforeach
             </ul>
         @else
-            <p>No visionboards found.</p>
+            <p>現在、ビジョンボードはありません</p>
         @endif
     </div>
        <!-- ページネーション -->
@@ -91,17 +94,19 @@
 
 
 
-      <!-- 右側エリア -->
-<!-- 右側エリア -->
+   <!-- 右側エリア -->
 <div id="right-area" class="w-full md:w-2/3 p-2">
     <!-- 初期表示（最新のビジョンボード） -->
     @if ($latestVisionboard)
-        <div class="visionboard">
+        <div class="visionboard relative w-[800px] h-[600px] border border-gray-300 bg-gray-100 mx-auto mb-4">
             @foreach ($latestVisionboard->elements as $element)
-                <div class="element" style="left: {{ $element->position_x }}px; bottom: {{ $element->position_y }}px;">
-                    <p>{{ $element->element_data }}</p>
+                <div class="element draggable"
+                   data-id="{{ $element->id }}"
+                   style="left: {{ $element->position_x }}px; top: {{ $element->position_y }}px; position: absolute;"
+                   data-x="{{ $element->position_x }}" data-y="{{ $element->position_y }}">
+                    <p class="{{ $element->text_style }} {{ $element->text_size }}">{{ $element->element_data }}</p>
                     @if ($element->image)
-                        <img src="/images/{{ $element->image }}" alt="Element Image" style="max-width: 100px;">
+                        <img src="{{ asset('images/' . $element->image) }}" alt="Element Image" style="max-width: 200px;">
                     @endif
                 </div>
             @endforeach
@@ -109,7 +114,6 @@
     @else
         <p>ビジョンボードが見つかりません。</p>
     @endif
-</div>
 </div>
 @endsection
 
@@ -142,12 +146,15 @@
     }
 
     function generateBoardHtml(data) {
-        let html = `<div class="visionboard" style="position: relative; width: 800px; height: 600px; border: 1px solid #ccc; background-color: #f9f9f9; margin: 0 auto;">`;
+        let html = `<div class="visionboard relative w-[800px] h-[600px] border border-gray-300 bg-gray-100 mx-auto mb-4">`;
         data.elements.forEach(element => {
-            html += `<div class="element" style="position: absolute; left: ${element.position_x}px; bottom: ${element.position_y}px; border: 1px solid #000; padding: 10px; background-color: #fff;">`;
-            html += `<p>${element.element_data}</p>`;
+            html += `<div class="element draggable" 
+                       data-id="${element.id}" 
+                       style="left: ${element.position_x}px; top: ${element.position_y}px; position: absolute;" 
+                       data-x="${element.position_x}" data-y="${element.position_y}">
+                        <p class="${element.text_style} ${element.text_size}">${element.element_data}</p>`;
             if (element.image) {
-                html += `<img src="/images/${element.image}" alt="Element Image" style="max-width: 100px;">`;
+                html += `<img src="/images/${element.image}" alt="Element Image" style="max-width: 200px;">`;
             }
             html += `</div>`;
         });

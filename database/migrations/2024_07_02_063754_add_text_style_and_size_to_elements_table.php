@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('questions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade'); // 外部キーを指定
-            $table->string('question_text');
-            $table->timestamps();
+        Schema::table('elements', function (Blueprint $table) {
+             $table->string('text_style')->nullable();
+            $table->string('text_size')->nullable();
         });
     }
 
@@ -24,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('questions');
+        Schema::table('elements', function (Blueprint $table) {
+              $table->dropColumn('text_style');
+            $table->dropColumn('text_size');
+        });
     }
 };

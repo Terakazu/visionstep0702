@@ -38,7 +38,7 @@
                         <!-- カラム２ -->
                         <div class="w-full md:w-1/1 px-3 mb-2 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                テキスト（画像の場合は、画像
+                                テキスト（画像の場合は、画像キャプション）
                             </label>
                             <input name="element_data" value="{{ old('element_data') }}" class="appearance-none block w-full text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="">
                         </div>
@@ -48,7 +48,28 @@
                                     画像
                                 </label>
                                 <input name="image" class="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="file" placeholder="">
-                            </div>
+                         </div>
+                         
+                          <!-- テキストスタイルオプション -->
+                        <div class="w-full md:w-1/1 px-3 mb-2 md:mb-0">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                文字のスタイル
+                            </label>
+                            <select name="text_style" class="appearance-none block w-full text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white">
+                                <option value="normal">標準</option>
+                                <option value="bold">太字</option>
+                            </select>
+                        </div>
+                        <div class="w-full md:w-1/1 px-3 mb-2 md:mb-0">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                文字のサイズ
+                            </label>
+                            <select name="text_size" class="appearance-none block w-full text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white">
+                                <option value="text-base">標準</option>
+                                <option value="text-2xl">大</option>
+                                <option value="text-4xl">特大</option>
+                            </select>
+                        </div>
                        
                          <input type="hidden" name="visionboard_id" value="{{ $visionboard->id }}">
                         <!-- 保存ボタン -->
@@ -63,3 +84,5 @@
         </div>
     </div>
 @endsection
+
+

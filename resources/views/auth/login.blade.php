@@ -12,6 +12,12 @@
         @endauth
     </div>
 @endif
+
+<!-- 自社ロゴを表示する部分 -->
+    <div class="flex justify-center mt-6">
+        <img src="{{ asset('images/logo.png') }}" alt="Company Logo" class="w-24 h-24">
+    </div>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 

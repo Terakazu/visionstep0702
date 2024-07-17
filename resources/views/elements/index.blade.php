@@ -19,6 +19,8 @@
                     <th>画像</th>
                     <th>位置X</th>
                     <th>位置Y</th>
+                    <th>文字の太さ</th>
+                    <th>文字の大きさ</th>
                     <th>アクション</th>
                 </tr>
             </thead>
@@ -34,6 +36,8 @@
                         </td>
                         <td>{{ $element->position_x }}</td>
                         <td>{{ $element->position_y }}</td>
+                        <td>{{ $element->text_style }}</td>
+                        <td>{{ $element->text_size }}</td>
                         <td>
                            <a href="{{ route('visionboards.elements.edit', ['visionboard' => $visionboard->id, 'element' => $element->id]) }}">編集</a>
                             <form action="{{ route('visionboards.elements.destroy',['visionboard' => $visionboard->id, 'element' => $element->id]) }}" method="POST" style="display:inline;">

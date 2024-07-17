@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('questions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade'); // 外部キーを指定
-            $table->string('question_text');
-            $table->timestamps();
+        Schema::table('goals', function (Blueprint $table) {
+           $table->boolean('is_selected')->default(false)->after('action');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('questions');
+        Schema::table('goals', function (Blueprint $table) {
+           $table->dropColumn('is_selected');
+        });
     }
 };

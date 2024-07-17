@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('condition');
             $table->text('action');
             $table->timestamps();
+            $table->boolean('is_selected')->default(false);
         });
     }
 

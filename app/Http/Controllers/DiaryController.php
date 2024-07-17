@@ -13,7 +13,7 @@ class DiaryController extends Controller
      */
     public function index()
     {
-       $diaries = Diary::all();
+        $diaries = Diary::where('user_id', auth()->id())->get();
         return view('diaries.index', compact('diaries'));
     }
 
@@ -39,16 +39,25 @@ class DiaryController extends Controller
 
        $data = $request->all();
         $data['user_id'] = Auth::id(); // user_idを明示的に設定
-
+        
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public');
-            $data['image'] = $imagePath;
+        $imageName = time().'.'.$request->image->extension();
+
+         // ディレクトリの存在を確認
+        $imagePath = public_path('images');
+        if (!file_exists($imagePath)) {
+            mkdir($imagePath, 0777, true); // ディレクトリがない場合は作成
+        }
+        
+        $request->image->move($imagePath, $imageName);
+        $data['image'] =  $imageName; // 保存パスを設定
     }
+    
 
     Diary::create($data);
 
     return redirect()->route('diaries.index')
-                    ->with('success', 'Diary created successfully.');
+                     ->with('success', 'Diary created successfully.');
     }
 
 
@@ -58,42 +67,39 @@ class DiaryController extends Controller
      */
     public function show(Diary $diary)
     {
-        return view('diaries.show', compact('diary'));
+        if ($diary->user_id !== auth()->id()) {
+        abort(403, 'Unauthorized action.');
+    }
+    return view('diaries.show', compact('diary'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Diary $diary)
-    {
-        return view('diaries.edit', compact('diary'));
+{
+    if ($diary->user_id !== auth()->id()) {
+        abort(403, 'Unauthorized action.');
     }
+    return view('diaries.edit', compact('diary'));
+}
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Diary $diary)
-    {
-      $request->validate([
-            'calendar_date' => 'required|date',
-            'body' => 'required',
-            'goodpoint' => 'required',
-        ]);
-
-        $diary->update($request->all());
-
-        return redirect()->route('diaries.index')
-                        ->with('success', 'Diary updated successfully.');
+public function update(Request $request, Diary $diary)
+{
+    if ($diary->user_id !== auth()->id()) {
+        abort(403, 'Unauthorized action.');
     }
+    $diary->update($request->all());
+    return redirect()->route('diaries.index')->with('success', 'Diary updated successfully.');
+}
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Diary $diary)
-    {
-      $diary->delete();
-
-        return redirect()->route('diaries.index')
-                        ->with('success', 'Diary deleted successfully.');
+public function destroy(Diary $diary)
+{
+    if ($diary->user_id !== auth()->id()) {
+        abort(403, 'Unauthorized action.');
     }
+    $diary->delete();
+    return redirect()->route('diaries.index')->with('success', 'Diary deleted successfully.');
+}
+
 }

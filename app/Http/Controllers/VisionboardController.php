@@ -63,7 +63,7 @@ class VisionboardController extends Controller
         $visionboard->user_id = $user->id; // ログインユーザーのIDを設定
         $visionboard->save();
 
-        return redirect('/');
+        return redirect()->route('visionboards.elements.create', ['visionboard' => $visionboard->id]);
     }
 
     /**
@@ -126,8 +126,10 @@ class VisionboardController extends Controller
         $visionboard->board_name = $request->board_name;
         $visionboard->save();
 
-        return redirect('/');
-    }
+       // visionboards.elements.createルートへの正しいリダイレクト
+    return redirect()->route('visionboards.elements.create', ['visionboard' => $visionboard->id]);
+}
+    
 
     /**
      * Remove the specified resource from storage.
@@ -135,17 +137,16 @@ class VisionboardController extends Controller
     public function destroy($id)
     {
         $visionboard = Visionboard::where('user_id', Auth::user()->id)->find($id);
-        
+
         // ビジョンボードが見つからない場合、404エラーを返す
         if (!$visionboard) {
             abort(404, 'Visionboard not found');
         }
-        
-        $visionboard->delete();
-        
-        return redirect('/');
-    }
 
+        $visionboard->delete();
+
+        return redirect()->route('visionboards.index')->with('status', 'ビジョンボードが削除されました。');
+}
     /**
      * Update the positions of the vision board elements.
      */

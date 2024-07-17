@@ -6,6 +6,7 @@ use App\Http\Controllers\ElementController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DiaryController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
@@ -25,18 +26,16 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-   /// ビジョンボード関連
-    Route::get('/visionboards/{visionboard}', [VisionboardController::class, 'show'])->name('visionboards.show');
-    Route::post('/visionboards', [VisionboardController::class, 'store'])->name('visionboard_store');
-    Route::delete('/visionboards/{visionboard}', [VisionboardController::class, 'destroy'])->name('visionboard_destroy');
-    Route::get('/visionboards/{visionboard}/edit', [VisionboardController::class, 'edit'])->name('visionboard_edit');
-    Route::put('/visionboards/{visionboard}', [VisionboardController::class, 'update'])->name('visionboard_update');
-    Route::post('/visionboards/elements/update-positions', [VisionBoardController::class, 'updatePositions'])->name('visionboards.elements.updatePositions');
+   // ビジョンボード関連
+    Route::resource('visionboards', VisionboardController::class);
+    Route::post('/visionboards/elements/update-positions', [ElementController::class, 'updatePositions'])->name('visionboards.elements.updatePositions');
 
     Route::get('/questions', [UserQuestionController::class, 'index'])->name('questions.index');
     Route::get('/questions/{question}', [UserQuestionController::class, 'show'])->name('questions.show');
     Route::post('/questions/{question}/answers', [UserQuestionController::class, 'storeAnswer'])->name('answers.store');
     Route::get('/questions-with-answers', [UserQuestionController::class, 'questionsWithAnswers'])->name('questions.with.answers');
+    Route::get('/user-answers', [UserQuestionController::class, 'userAnswers'])->name('user.answers');
+
     
 
     Route::get('/categories', [UserQuestionController::class, 'selectCategory'])->name('categories.select');
@@ -44,9 +43,17 @@ Route::middleware(['auth'])->group(function () {
     
     Route::resource('diaries', DiaryController::class);
     
-    Route::resource('goals', GoalController::class);
-    
-    
+    Route::get('/goals', [GoalController::class, 'index'])->name('goals.index');
+    Route::get('/goals/create', [GoalController::class, 'create'])->name('goals.create');
+    Route::post('/goals', [GoalController::class, 'store'])->name('goals.store');
+    Route::get('/goals/{goal}/edit', [GoalController::class, 'edit'])->name('goals.edit');
+    Route::put('/goals/{goal}', [GoalController::class, 'update'])->name('goals.update');
+    Route::delete('/goals/{goal}', [GoalController::class, 'destroy'])->name('goals.destroy');
+    Route::post('/goals/update-selected', [GoalController::class, 'updateSelectedGoal'])->name('goals.updateSelected');
+ 
+    Route::get('/chat', [ChatController::class, 'chat'])->name('chat');
+    Route::post('/chat', [ChatController::class, 'chat']);
+
     // ビジョンボード内の要素関連
     Route::prefix('visionboards')->group(function () {
         Route::get('{visionboard}/elements/create', [ElementController::class, 'create'])->name('visionboards.elements.create');

@@ -45,6 +45,27 @@
                                 </label>
                                 <input name="position_y" value="{{ $element->position_y }}" class="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="number" placeholder="">
                             </div>
+                            
+                              <!-- テキストスタイルオプション -->
+                        <div class="w-full md:w-1/1 px-3 mb-2 md:mb-0">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                文字のスタイル
+                            </label>
+                            <select name="text_style" value="{{ $element->text_style }}" class="appearance-none block w-full text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white">
+                                <option value="normal">標準</option>
+                                <option value="bold">太字</option>
+                            </select>
+                        </div>
+                        <div class="w-full md:w-1/1 px-3 mb-2 md:mb-0">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                文字のサイズ
+                            </label>
+                            <select name="text_size" value="{{ $element->text_size}}" class="appearance-none block w-full text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white">
+                                <option value="text-base">標準</option>
+                                <option value="text-2xl">大</option>
+                                <option value="text-4xl">特大</option>
+                            </select>
+                        </div>
                             <div class="flex flex-col">
                                 <div class="text-gray-700 text-center px-4 py-2 m-2">
                                     <x-button class="bg-blue-500 rounded-lg">保存</x-button>

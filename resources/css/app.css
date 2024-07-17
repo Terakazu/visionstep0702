@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* カスタムクラス */
 .draggable {
     position: absolute;
     padding: 10px;
@@ -30,3 +31,85 @@
     margin: 0 auto;
 }
 
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.grid-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.element img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* ボタンの共通スタイル */
+.btn {
+    display: inline-block;
+    font-bold: bold;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s;
+    font-size: 1rem; /* フォントサイズを追加 */
+}
+
+/* ボタンの色スタイル */
+.btn-primary {
+    background-color: #4f46e5; /* インディゴ */
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: #4338ca; /* インディゴダーク */
+}
+
+.btn-secondary {
+    background-color: #10b981; /* グリーン */
+    color: #fff;
+}
+.btn-secondary:hover {
+    background-color: #059669; /* グリーンダーク */
+}
+
+.btn-danger {
+    background-color: #ef4444; /* レッド */
+    color: #fff;
+}
+.btn-danger:hover {
+    background-color: #dc2626; /* レッドダーク */
+}
+
+.btn-register {
+    background-color: #6366f1; /* 青 */
+    color: #fff;
+}
+.btn-register:hover {
+    background-color: #4f46e5; /* 青ダーク */
+}
+
+/* ピンクに合う青色のスタイル */
+.btn-custom-blue {
+    background-color: #5b9bd5; /* 中間ブルー */
+    color: #fff;
+}
+.btn-custom-blue:hover {
+    background-color: #005bb5; /* 中間ブルーのダーク版 */
+}
+
+.tag {
+    display: inline-block;
+    background-color: #e2e8f0; /* gray-200 */
+    color: #2d3748; /* gray-800 */
+    font-size: 0.75rem; /* text-xs */
+    padding: 0.25rem 0.5rem; /* px-2 py-1 */
+    border-radius: 0.25rem; /* rounded */
+}

@@ -9,5 +9,9 @@ class Goal extends Model
 {
     use HasFactory;
     
-    protected $fillable=['user_id','deadline','condition','action'];
+    protected $fillable=['user_id','deadline','condition','action','is_selected'];
+    
+    protected $casts = [
+        'is_selected' => 'boolean',
+    ];
 }
